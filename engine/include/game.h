@@ -4,6 +4,10 @@
 typedef unsigned int State;
 typedef unsigned short Move;
 
+unsigned int MOVE_COUNT;
+unsigned int PLAYER_CHOICE;
+unsigned int TURN_TAKER;
+
 /* Creates an empty state for a new game. Player must choose
  * to either play as `X`(1) or `O`(0)
  */
@@ -21,4 +25,12 @@ Move encode_move(unsigned short side, unsigned short square);
  */
 int transition(State *state, Move *move);
 
+/* Returns the current game move count */
+unsigned short get_move_count(State *state);
+
+/* Returns the player's choice of side */
+unsigned short get_player_choice(State *state);
+
+/* Returns which side is currently the turn taker */
+unsigned short get_turn_taker(State *state);
 #endif

@@ -31,10 +31,25 @@ int transition(State *state, Move *move) {
   }
 
   unsigned int n = (*state & MOVE_COUNT) >> 18;
+  *state &= ~MOVE_COUNT;
   *state |= (n + 1) << 18;
 
   *state |= 2 << shift;
   *state |= shift == 0 ? actual_turn : actual_turn << (shift - 1);
 
+  *state ^= TURN_TAKER;
+
   return 0;
+}
+
+unsigned short get_move_count(State *state) {
+  return (*state & MOVE_COUNT) >> 18;
+}
+
+unsigned short get_player_choice(State *state) {
+  return (*state & PLAYER_CHOICE) >> 22;
+}
+
+unsigned short get_turn_taker(State *state) {
+  return (*state & TURN_TAKER) >> 23;
 }

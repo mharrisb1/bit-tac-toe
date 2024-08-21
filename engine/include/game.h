@@ -7,6 +7,7 @@ typedef unsigned short Move;
 unsigned int MOVE_COUNT;
 unsigned int PLAYER_CHOICE;
 unsigned int TURN_TAKER;
+unsigned int GRAVE_MARKERS;
 
 /** 
  * Creates an empty state for a new game. 
@@ -50,5 +51,10 @@ unsigned short get_player_choice(State *state);
  * Returns which side is currently the turn taker. 
  */
 unsigned short get_turn_taker(State *state);
+
+/**
+ * Returns the value of the given square
+ */
+unsigned short get_square(State *state, unsigned short square);
 
 #endif

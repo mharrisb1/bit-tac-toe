@@ -125,15 +125,19 @@ void test_ignore_taken_square() {
   Move move;
 
   state = new_game(1);
-  move  = encode_move(1, 0);
+  move  = encode_move(1, 5);
 
   transition(&state, &move);
-  assert(state == 0x440003);
+  assert(get_move_count(&state) == 1);
+  assert(get_player_choice(&state) == 1);
+  assert(get_turn_taker(&state) == 0);
 
-  move = encode_move(0, 0);
+  move = encode_move(0, 5);
 
   transition(&state, &move);
-  assert(state == 0x440003);
+  assert(get_move_count(&state) == 1);
+  assert(get_player_choice(&state) == 1);
+  assert(get_turn_taker(&state) == 0);
 }
 
 int main() {

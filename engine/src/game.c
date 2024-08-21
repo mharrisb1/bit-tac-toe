@@ -1,5 +1,10 @@
 #include "game.h"
 
+static const unsigned short WIN_COMBOS[8][3] = {
+    {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6},
+    {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, {6, 4, 2},
+};
+
 unsigned int MOVE_COUNT    = 0x3C0000;
 unsigned int PLAYER_CHOICE = 0x400000;
 unsigned int TURN_TAKER    = 0x800000;
@@ -25,6 +30,27 @@ unsigned int is_square_set(State *state, unsigned short square) {
 }
 
 void toggle_turn_taker(State *state) { *state ^= TURN_TAKER; }
+
+unsigned short is_win(State *state, unsigned short a, unsigned short b,
+                      unsigned short c) {
+  // TODO
+  return 1;
+}
+
+unsigned short is_viable(State *state, unsigned short a, unsigned short b,
+                         unsigned short c) {
+  // TODO
+  return 1;
+}
+
+unsigned short is_grave_marked(State *state, unsigned short square) {
+  // TODO
+  return 1;
+}
+
+void mark_grave(State *state, unsigned short ix) {
+  // TODO
+}
 
 // Public
 State new_game(unsigned short player_side) {
@@ -55,6 +81,18 @@ int transition(State *state, Move *move) {
   set_move_count(state, ++move_count);
   set_square_state(state, square, turn_taker);
   toggle_turn_taker(state);
+
+  if (move_count > 4) {
+    // TODO
+    // for ix, combo in enumerate(possble win combos):
+    //     if is_grave_marked(state, ...combo):
+    //        continue
+    //     if is_win(state, ...combo):
+    //        return 1
+    //     else:
+    //        if !is_viable(state, ...combo):
+    //            mark_grave(state, ix)
+  }
 
   return 0;
 }

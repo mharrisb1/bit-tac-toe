@@ -89,10 +89,14 @@ void test_invalid_transition() {
 }
 
 void test_transition() {
-  State state = new_game(1);
+  State state;
+  Move move;
+  int t;
 
-  Move move = encode_move(1, 0);
-  int t     = transition(&state, &move);
+  state = new_game(1);
+
+  move = encode_move(1, 0);
+  t    = transition(&state, &move);
 
   assert(t == 0);
   assert(get_move_count(&state) == 1);
@@ -106,19 +110,30 @@ void test_transition() {
   assert(get_move_count(&state) == 2);
   assert(get_player_choice(&state) == 1);
   assert(get_turn_taker(&state) == 1);
+
+  move = encode_move(1, 2);
+  t    = transition(&state, &move);
+
+  assert(t == 0);
+  assert(get_move_count(&state) == 3);
+  assert(get_player_choice(&state) == 1);
+  assert(get_turn_taker(&state) == 0);
 }
 
 void test_ignore_taken_square() {
-  State state = new_game(1);
-  Move move   = encode_move(1, 0);
+  State state;
+  Move move;
+
+  state = new_game(1);
+  move  = encode_move(1, 0);
 
   transition(&state, &move);
   assert(state == 0x440003);
 
+  move = encode_move(0, 0);
+
   transition(&state, &move);
   assert(state == 0x440003);
-
-  assert(1 == 0); // FIXME: this should fail bc of unexpected turn taker
 }
 
 int main() {

@@ -21,7 +21,7 @@ void set_square_state(State *state, unsigned short square,
 
 unsigned int is_square_set(State *state, unsigned short square) {
   unsigned int shift = square << 1;
-  return *state & 2 << shift;
+  return *state & 2 << shift >> 1;
 }
 
 void toggle_turn_taker(State *state) { *state ^= TURN_TAKER; }

@@ -4,6 +4,9 @@
 typedef unsigned int State;
 typedef unsigned short Move;
 
+unsigned int EMPTY;
+unsigned int X;
+unsigned int O;
 unsigned int MOVE_COUNT;
 unsigned int PLAYER_CHOICE;
 unsigned int TURN_TAKER;

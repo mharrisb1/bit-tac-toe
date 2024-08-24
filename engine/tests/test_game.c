@@ -27,6 +27,20 @@ void test_get_turn_taker() {
   assert(get_turn_taker(&state) == 0);
 }
 
+void test_get_square() {
+  State state;
+  state = 0xB8EC;
+
+  assert(get_square(&state, 0) == EMPTY);
+  assert(get_square(&state, 1) == X);
+  assert(get_square(&state, 2) == O);
+  assert(get_square(&state, 3) == X);
+  assert(get_square(&state, 4) == EMPTY);
+  assert(get_square(&state, 5) == O);
+  assert(get_square(&state, 6) == X);
+  assert(get_square(&state, 7) == O);
+}
+
 void test_new_game() {
   State s1 = new_game(1);
   assert(get_move_count(&s1) == 0);
@@ -144,6 +158,7 @@ int main() {
   test_get_move_count();
   test_get_player_choice();
   test_get_turn_taker();
+  test_get_square();
 
   test_new_game();
   test_restart_game();

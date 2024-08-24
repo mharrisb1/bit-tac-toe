@@ -6,6 +6,9 @@ unsigned short WIN_COMBOS[8][3] = {
     {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, {6, 4, 2},
 };
 
+unsigned int EMPTY         = 0x0;
+unsigned int X             = 0x3;
+unsigned int O             = 0x2;
 unsigned int MOVE_COUNT    = 0x3C0000;
 unsigned int PLAYER_CHOICE = 0x400000;
 unsigned int TURN_TAKER    = 0x800000;
@@ -144,5 +147,5 @@ unsigned short get_turn_taker(State *state) {
 
 unsigned short get_square(State *state, unsigned short square) {
   unsigned int shift = square << 1;
-  return *state >> shift;
+  return (*state >> shift) & X;
 }

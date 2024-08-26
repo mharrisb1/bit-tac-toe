@@ -6,16 +6,16 @@
 void test_get_move_count() {
   State state;
   for (unsigned int i = 0; i < 9; i++) {
-    state = MOVE_COUNT & (i << 18);
+    state = 0x3C0000 & (i << 18);
     assert(get_move_count(&state) == i);
   }
 }
 
 void test_get_player_choice() {
-  State s1 = new_game(1);
+  State s1 = new_game(X);
   assert(get_player_choice(&s1) == 1);
 
-  State s2 = new_game(0);
+  State s2 = new_game(O);
   assert(get_player_choice(&s2) == 0);
 }
 
@@ -31,61 +31,66 @@ void test_get_square() {
   State state;
   state = 0xB8EC;
 
-  assert(get_square(&state, 0) == EMPTY);
-  assert(get_square(&state, 1) == X);
-  assert(get_square(&state, 2) == O);
-  assert(get_square(&state, 3) == X);
-  assert(get_square(&state, 4) == EMPTY);
-  assert(get_square(&state, 5) == O);
-  assert(get_square(&state, 6) == X);
-  assert(get_square(&state, 7) == O);
+  assert(get_square(&state, BOTTOM_LEFT) == EMPTY);
+  assert(get_square(&state, BOTTOM_MIDDLE) == X);
+  assert(get_square(&state, BOTTOM_RIGHT) == O);
+  assert(get_square(&state, MIDDLE_LEFT) == X);
+  assert(get_square(&state, MIDDLE_MIDDLE) == EMPTY);
+  assert(get_square(&state, MIDDLE_RIGHT) == O);
+  assert(get_square(&state, TOP_LEFT) == X);
+  assert(get_square(&state, TOP_MIDDLE) == O);
+  assert(get_square(&state, TOP_RIGHT) == EMPTY);
 }
 
 void test_new_game() {
-  State s1 = new_game(1);
+  State s1 = new_game(X);
   assert(get_move_count(&s1) == 0);
   assert(get_player_choice(&s1) == 1);
   assert(get_turn_taker(&s1) == 1);
 
-  State s2 = new_game(0);
+  State s2 = new_game(O);
   assert(get_move_count(&s2) == 0);
   assert(get_player_choice(&s2) == 0);
   assert(get_turn_taker(&s2) == 1);
 }
 
 void test_restart_game() {
-  State s1 = new_game(1);
-  Move m1  = encode_move(1, 7);
+  State s1 = new_game(X);
+  Move m1  = encode_move(X, TOP_MIDDLE);
 
   transition(&s1, &m1);
   assert(get_move_count(&s1) == 1);
   assert(get_player_choice(&s1) == 1);
   assert(get_turn_taker(&s1) == 0);
+  assert(get_square(&s1, TOP_MIDDLE) == X);
 
   restart_game(&s1);
   assert(get_move_count(&s1) == 0);
   assert(get_player_choice(&s1) == 1);
   assert(get_turn_taker(&s1) == 1);
+  assert(get_square(&s1, TOP_MIDDLE) == EMPTY);
 
-  State s2 = new_game(0);
-  Move m2  = encode_move(1, 7);
+  State s2 = new_game(O);
+  Move m2  = encode_move(X, TOP_MIDDLE);
 
   transition(&s2, &m2);
   assert(get_move_count(&s2) == 1);
   assert(get_player_choice(&s2) == 0);
   assert(get_turn_taker(&s2) == 0);
+  assert(get_square(&s2, TOP_MIDDLE) == X);
 
   restart_game(&s2);
   assert(get_move_count(&s1) == 0);
   assert(get_player_choice(&s2) == 0);
   assert(get_turn_taker(&s1) == 1);
+  assert(get_square(&s2, TOP_MIDDLE) == EMPTY);
 }
 
 void test_encode_move() {
-  Move m1 = encode_move(0, 7);
+  Move m1 = encode_move(O, TOP_MIDDLE);
   assert(m1 == 0x7);
 
-  Move m2 = encode_move(1, 7);
+  Move m2 = encode_move(X, TOP_MIDDLE);
   assert(m2 == 0x17);
 
   for (int i = 0; i < 2; i++) {
@@ -96,8 +101,8 @@ void test_encode_move() {
 }
 
 void test_invalid_transition() {
-  State state = new_game(1);
-  Move move   = encode_move(0, 0);
+  State state = new_game(X);
+  Move move   = encode_move(O, BOTTOM_LEFT);
 
   assert(transition(&state, &move) == -1);
 }
@@ -107,9 +112,9 @@ void test_transition() {
   Move move;
   int t;
 
-  state = new_game(1);
+  state = new_game(X);
 
-  move = encode_move(1, 0);
+  move = encode_move(X, BOTTOM_LEFT);
   t    = transition(&state, &move);
 
   assert(t == 0);
@@ -117,7 +122,7 @@ void test_transition() {
   assert(get_player_choice(&state) == 1);
   assert(get_turn_taker(&state) == 0);
 
-  move = encode_move(0, 1);
+  move = encode_move(O, BOTTOM_MIDDLE);
   t    = transition(&state, &move);
 
   assert(t == 0);
@@ -125,7 +130,7 @@ void test_transition() {
   assert(get_player_choice(&state) == 1);
   assert(get_turn_taker(&state) == 1);
 
-  move = encode_move(1, 2);
+  move = encode_move(X, BOTTOM_RIGHT);
   t    = transition(&state, &move);
 
   assert(t == 0);
@@ -138,15 +143,15 @@ void test_ignore_taken_square() {
   State state;
   Move move;
 
-  state = new_game(1);
-  move  = encode_move(1, 5);
+  state = new_game(X);
+  move  = encode_move(X, MIDDLE_RIGHT);
 
   transition(&state, &move);
   assert(get_move_count(&state) == 1);
   assert(get_player_choice(&state) == 1);
   assert(get_turn_taker(&state) == 0);
 
-  move = encode_move(0, 5);
+  move = encode_move(O, MIDDLE_RIGHT);
 
   transition(&state, &move);
   assert(get_move_count(&state) == 1);

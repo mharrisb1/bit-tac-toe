@@ -5,7 +5,15 @@ A simple tic-tac-toe game built around a 32-bit state.
 > [!NOTE]
 > Created as a submission for [CS Primer Tic-tac-toe problem](https://csprimer.com/watch/tic-tac-toe)
 
-## Memory structure
+1. [Engine](#engine)
+2. [Solver](#solver)
+3. [TUI Client](#tui-client)
+
+## Engine
+
+The engine is where the main logic of the game is written. All clients and bots must only interact with the game through the engine's interface.
+
+### Memory structure
 
 The game state can fit in any 4-byte value such as an unsigned integer in C[^1].
 
@@ -31,7 +39,7 @@ The game state can fit in any 4-byte value such as an unsigned integer in C[^1].
 | 23     | 1    | [Current turn](#current-turn)      |
 | 24     | 8    | [Grave markers](#grave-markers)    |
 
-### Game board
+#### Game board
 
 Here is an example of a game board with each square makred with a number:
 
@@ -78,50 +86,54 @@ To represent tristate logic with bits we need two bits. For this scheme, we use 
 
 With nine total squares on the board and each square being comprosed of two bits, the game board takes up 18 bits of the state. The squares are ordered from LSB to MSB with the two most significant bits representing square 8 and the two least significant bits representing square 0.
 
-### Move count
+#### Move count
 
 Game move count is stored as four bits to represent all possible integers from 0-15 (though only 0-9 are used). In addition to keeping a basic metric of turns taken, the count also allows us to defer checking for wins since no player can technically win a game prior to the fifth move.
 
-### Player's choice
+#### Player's choice
 
 The player is allowed to choose any side, either `X` or `O`. To keep track of this choice, a single bit is used with the on position representing the player's choice to play as `X` and the off position representing the player's choice to play as `O`.
 
 The opposing side will be controlled by a basic AI.
 
-### Current turn
+#### Current turn
 
 To keep track of whose turn it currently is a single bit is used. If the bit is in the on position then the current move must be taken by `X` and if the bit is in the off position then the current move must be taken by `O`.
 
-### Grave markers
+#### Grave markers
 
 Along with deferring win checking with the [move counter](#move-count) to reduce some of the computational overhead, grave markers are also used to keep track of which winning square combinations are no longer available. A combination is no longer available to win by if both an `X` and `O` are present within the squares.
 
-## Game play
+### Game play
 
-The game play can be represented by the following flow chart:
+The game play loop can be represented by the following flow chart:
 
 ```mermaid
 flowchart TD
-    Y((Game Start))
-    A[Next side's turn]
-    B[Mark square]
-    C[Increment move count]
-    D{Count >= 5}
-    E{Is win?}
-    F[Mark graves]
-    Z((Game Over))
+    A((Start))
+    B[Receive move]
+    C[Execute move]
 
-    Y --> B
+    D[Increment move count]
+    E[Update square state]
+    F[Toggle turn taker]
 
-    A --> B --> C --> D
+    G{Move count >= 5}
+    H{Is win?}
+    I{Is cat's game?}
 
-    D -- No --> A
-    D -- Yes --> E
+    Z((End))
 
-    E -- Yes --> Z
-    E -- No --> F
+    A --> B --> C --> D --> E --> F --> G
 
-    F --> A
+    G -- Yes --> H
+    G -- No --> B
+
+    H -- Yes --> Z
+    H -- No --> I
+
+    I -- Yes --> Z
+    I -- No --> B
 ```
 
 ### Winning square combinations
@@ -139,22 +151,7 @@ Below is a table of possible square combinations that result in a win:
 | 7   | {0, 4, 8}   |
 | 8   | {6, 4, 2}   |
 
-## Design
-
-The design involved two main parts:
-
-- a client that can render the game state
-- an engine that is a finite state machine that manages the game state accordingly
-
-### Client
-
-The client can be developed completely separately from the engine though the two will share some utility logic. The client should be able to read the game state and correctly parse:
-
-- Square states
-- Move count
-- Current turn taker
-
-### FSM Engine
+### Formal representation
 
 The engine is just a simple state machine with the following definition:
 
@@ -183,3 +180,11 @@ The initial state is an empty board, empty counter, empty player choice, empty c
 #### 5. Accepting States ($F$)
 
 The accepting states are any states that represent a win for `X`, a win for `0`, or where all grave markers are flipped on (resulting in a cat's game).
+
+## Solver
+
+[TODO]
+
+## TUI Client
+
+[TODO]

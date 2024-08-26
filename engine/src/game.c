@@ -1,9 +1,15 @@
 #include "game.h"
 
-static const unsigned int WIN_COMBOS_COUNT     = 8;
-unsigned short WIN_COMBOS[WIN_COMBOS_COUNT][3] = {
-    {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6},
-    {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, {6, 4, 2},
+static const unsigned int WIN_COMBOS_COUNT  = 8;
+enum Square WIN_COMBOS[WIN_COMBOS_COUNT][3] = {
+    {BOTTOM_LEFT, BOTTOM_MIDDLE, BOTTOM_RIGHT},
+    {MIDDLE_LEFT, MIDDLE_MIDDLE, MIDDLE_RIGHT},
+    {TOP_LEFT, TOP_MIDDLE, TOP_RIGHT},
+    {BOTTOM_LEFT, MIDDLE_LEFT, TOP_LEFT},
+    {BOTTOM_MIDDLE, MIDDLE_MIDDLE, TOP_MIDDLE},
+    {BOTTOM_RIGHT, MIDDLE_RIGHT, TOP_RIGHT},
+    {BOTTOM_LEFT, MIDDLE_MIDDLE, TOP_RIGHT},
+    {TOP_LEFT, MIDDLE_MIDDLE, BOTTOM_RIGHT},
 };
 
 #define MOVE_COUNT_MASK    0x3C0000
@@ -108,7 +114,7 @@ int transition(State *state, Move *move) {
 
   if (move_count > 4) {
     for (unsigned int i = 0; i < WIN_COMBOS_COUNT; i++) {
-      unsigned short *combo = WIN_COMBOS[i];
+      enum Square *combo = WIN_COMBOS[i];
       if (is_grave_marked(state, i)) {
         continue;
       }

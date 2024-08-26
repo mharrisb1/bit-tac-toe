@@ -7,7 +7,7 @@ A simple tic-tac-toe game built around a 32-bit state.
 
 1. [Engine](#engine)
 2. [Solver](#solver)
-3. [TUI Client](#tui-client)
+3. [Clients](#clients)
 
 ## Engine
 
@@ -185,6 +185,6 @@ The accepting states are any states that represent a win for `X`, a win for `0`,
 
 [TODO]
 
-## TUI Client
+## Clients
 
 [TODO]

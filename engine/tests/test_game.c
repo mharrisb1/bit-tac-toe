@@ -13,18 +13,18 @@ void test_get_move_count() {
 
 void test_get_player_choice() {
   State s1 = new_game(X);
-  assert(get_player_choice(&s1) == 1);
+  assert(get_player_choice(&s1) == X);
 
   State s2 = new_game(O);
-  assert(get_player_choice(&s2) == 0);
+  assert(get_player_choice(&s2) == O);
 }
 
 void test_get_turn_taker() {
   State state = 0x800000;
-  assert(get_turn_taker(&state) == 1);
+  assert(get_turn_taker(&state) == X);
 
   state = 0x0;
-  assert(get_turn_taker(&state) == 0);
+  assert(get_turn_taker(&state) == O);
 }
 
 void test_get_square() {
@@ -45,13 +45,13 @@ void test_get_square() {
 void test_new_game() {
   State s1 = new_game(X);
   assert(get_move_count(&s1) == 0);
-  assert(get_player_choice(&s1) == 1);
-  assert(get_turn_taker(&s1) == 1);
+  assert(get_player_choice(&s1) == X);
+  assert(get_turn_taker(&s1) == X);
 
   State s2 = new_game(O);
   assert(get_move_count(&s2) == 0);
-  assert(get_player_choice(&s2) == 0);
-  assert(get_turn_taker(&s2) == 1);
+  assert(get_player_choice(&s2) == O);
+  assert(get_turn_taker(&s2) == X);
 }
 
 void test_restart_game() {
@@ -60,14 +60,14 @@ void test_restart_game() {
 
   transition(&s1, &m1);
   assert(get_move_count(&s1) == 1);
-  assert(get_player_choice(&s1) == 1);
-  assert(get_turn_taker(&s1) == 0);
+  assert(get_player_choice(&s1) == X);
+  assert(get_turn_taker(&s1) == O);
   assert(get_square(&s1, TOP_MIDDLE) == X);
 
   restart_game(&s1);
   assert(get_move_count(&s1) == 0);
-  assert(get_player_choice(&s1) == 1);
-  assert(get_turn_taker(&s1) == 1);
+  assert(get_player_choice(&s1) == X);
+  assert(get_turn_taker(&s1) == X);
   assert(get_square(&s1, TOP_MIDDLE) == EMPTY);
 
   State s2 = new_game(O);
@@ -75,14 +75,14 @@ void test_restart_game() {
 
   transition(&s2, &m2);
   assert(get_move_count(&s2) == 1);
-  assert(get_player_choice(&s2) == 0);
-  assert(get_turn_taker(&s2) == 0);
+  assert(get_player_choice(&s2) == O);
+  assert(get_turn_taker(&s2) == O);
   assert(get_square(&s2, TOP_MIDDLE) == X);
 
   restart_game(&s2);
   assert(get_move_count(&s1) == 0);
-  assert(get_player_choice(&s2) == 0);
-  assert(get_turn_taker(&s1) == 1);
+  assert(get_player_choice(&s2) == O);
+  assert(get_turn_taker(&s1) == X);
   assert(get_square(&s2, TOP_MIDDLE) == EMPTY);
 }
 
@@ -119,24 +119,24 @@ void test_transition() {
 
   assert(t == 0);
   assert(get_move_count(&state) == 1);
-  assert(get_player_choice(&state) == 1);
-  assert(get_turn_taker(&state) == 0);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == O);
 
   move = encode_move(O, BOTTOM_MIDDLE);
   t    = transition(&state, &move);
 
   assert(t == 0);
   assert(get_move_count(&state) == 2);
-  assert(get_player_choice(&state) == 1);
-  assert(get_turn_taker(&state) == 1);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == X);
 
   move = encode_move(X, BOTTOM_RIGHT);
   t    = transition(&state, &move);
 
   assert(t == 0);
   assert(get_move_count(&state) == 3);
-  assert(get_player_choice(&state) == 1);
-  assert(get_turn_taker(&state) == 0);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == O);
 }
 
 void test_ignore_taken_square() {
@@ -148,15 +148,15 @@ void test_ignore_taken_square() {
 
   transition(&state, &move);
   assert(get_move_count(&state) == 1);
-  assert(get_player_choice(&state) == 1);
-  assert(get_turn_taker(&state) == 0);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == O);
 
   move = encode_move(O, MIDDLE_RIGHT);
 
   transition(&state, &move);
   assert(get_move_count(&state) == 1);
-  assert(get_player_choice(&state) == 1);
-  assert(get_turn_taker(&state) == 0);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == O);
 }
 
 int main() {

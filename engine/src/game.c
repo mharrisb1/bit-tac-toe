@@ -13,7 +13,7 @@ unsigned short WIN_COMBOS[WIN_COMBOS_COUNT][3] = {
 
 #define WIN_O_MASK     0x2A
 #define WIN_X_MASK     0x3F
-#define CATS_GAME_MASK 0x3
+#define CATS_GAME_MASK 0x1
 
 void reset_move_count(State *state) { *state &= ~MOVE_COUNT_MASK; }
 
@@ -90,7 +90,7 @@ Move encode_move(unsigned short side, enum Square square) {
 }
 
 int transition(State *state, Move *move) {
-  unsigned short turn_taker = *move >> 4;
+  unsigned short turn_taker = (*move >> 4) | O;
   unsigned int square       = *move & 0xF;
   unsigned int move_count   = get_move_count(state);
 
@@ -113,7 +113,7 @@ int transition(State *state, Move *move) {
         continue;
       }
       if (is_win(state, combo[0], combo[1], combo[2])) {
-        return turn_taker + 1;
+        return turn_taker;
       }
       if (!is_viable(state, combo[0], combo[1], combo[2])) {
         mark_grave(state, i);
@@ -132,11 +132,11 @@ unsigned short get_move_count(State *state) {
 }
 
 unsigned short get_player_choice(State *state) {
-  return (*state & PLAYER_CHOICE_MASK) >> 22;
+  return ((*state & PLAYER_CHOICE_MASK) >> 22) | O;
 }
 
 unsigned short get_turn_taker(State *state) {
-  return (*state & TURN_TAKER_MASK) >> 23;
+  return ((*state & TURN_TAKER_MASK) >> 23) | O;
 }
 
 unsigned short get_square(State *state, enum Square square) {

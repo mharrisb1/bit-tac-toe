@@ -41,9 +41,9 @@ Move encode_move(unsigned short side, enum Square square);
  *
  * Returns:
  * - 0 if the game can continue,
- * - 1 if the move results in a win for `O`,
- * - 2 if the move results in a win for `X`,
- * - 3 if the move results in a cat's game (draw),
+ * - 2 if the move results in a win for `O`,
+ * - 3 if the move results in a win for `X`,
+ * - 1 if the move results in a cat's game (draw),
  * - -1 if the move results in an invalid state.
  */
 int transition(State *state, Move *move);

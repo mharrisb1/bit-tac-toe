@@ -163,6 +163,14 @@ void test_transition() {
   assert(get_move_count(&state) == 6);
   assert(get_player_choice(&state) == X);
   assert(get_turn_taker(&state) == X);
+
+  move = encode_move(X, TOP_LEFT);
+  t    = transition(&state, &move);
+
+  assert(t == X); // X wins
+  assert(get_move_count(&state) == 7);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == O);
 }
 
 void test_ignore_taken_square() {

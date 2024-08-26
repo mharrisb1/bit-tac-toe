@@ -7,7 +7,9 @@ A simple tic-tac-toe game built around a 32-bit state.
 
 ## Memory structure
 
-The game state can fit in any 4-byte value such as an unsigned integer in C.
+The game state can fit in any 4-byte value such as an unsigned integer in C[^1].
+
+[^1]: Generally speaking but not true for all architectures
 
 ```txt
 31             24  22      18                                   0

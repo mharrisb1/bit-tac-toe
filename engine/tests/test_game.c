@@ -137,6 +137,32 @@ void test_transition() {
   assert(get_move_count(&state) == 3);
   assert(get_player_choice(&state) == X);
   assert(get_turn_taker(&state) == O);
+
+  move = encode_move(O, MIDDLE_LEFT);
+  t    = transition(&state, &move);
+
+  assert(t == 0);
+  assert(get_move_count(&state) == 4);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == X);
+
+  move = encode_move(X, MIDDLE_MIDDLE);
+  t    = transition(&state, &move);
+
+  assert(t == 0);
+  assert(get_move_count(&state) == 5);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == O);
+
+  assert(state == 0x1B5403BB);
+
+  move = encode_move(O, MIDDLE_RIGHT);
+  t    = transition(&state, &move);
+
+  assert(t == 0);
+  assert(get_move_count(&state) == 6);
+  assert(get_player_choice(&state) == X);
+  assert(get_turn_taker(&state) == X);
 }
 
 void test_ignore_taken_square() {

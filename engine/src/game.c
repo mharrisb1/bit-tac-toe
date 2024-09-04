@@ -105,7 +105,7 @@ int transition(State *state, Move *move) {
   }
 
   if (is_square_set(state, square) == 1) {
-    return 0;
+    return -1;
   }
 
   set_move_count(state, ++move_count);

@@ -173,6 +173,7 @@ void test_transition() {
   assert(get_turn_taker(&state) == O);
 }
 
+// FIXME: this now returns -1
 void test_ignore_taken_square() {
   State state;
   Move move;
